@@ -428,6 +428,14 @@
 
 <small>${item.paid ? "✅ Sudah dibayar" : "🟡 Belum dibayar"}</small>
 
+<br>
+
+<button
+  onclick="togglePaid('${item.id}', ${item.paid})"
+  style="width:auto;">
+  ${item.paid ? "Batalkan Lunas" : "Tandai Lunas"}
+</button>
+
 </span>
 
         <button
@@ -516,6 +524,24 @@ document.getElementById("budgetProgressBar").style.width =
     }
 
     loadExpenses();
+
+    async function togglePaid(id, currentPaid) {
+
+  const { error } =
+    await supabaseClient
+      .from("expenses")
+      .update({
+        paid: !currentPaid
+      })
+      .eq("id", id);
+
+  if (error) {
+    alert("Gagal mengubah status: " + error.message);
+    return;
+  }
+
+  loadExpenses();
+}
 
   }
 
