@@ -428,6 +428,13 @@
 
 <small>${item.paid ? "✅ Sudah dibayar" : "🟡 Belum dibayar"}</small>
 
+<br>
+<button
+  onclick="togglePaid('${item.id}', ${item.paid})"
+  style="width:auto;">
+  ${item.paid ? "Batalkan Lunas" : "Tandai Lunas"}
+</button>
+
 
 </span>
 
