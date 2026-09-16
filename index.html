@@ -296,59 +296,53 @@
 
   async function addExpense() {
 
-    const name =
+  const name =
+    document.getElementById("expenseName").value;
 
-      document.getElementById("expenseName").value;
+  const amount =
+    Number(document.getElementById("expenseAmount").value);
 
-    const amount =
+  const { data: { user } } =
+    await supabaseClient.auth.getUser();
 
-      Number(document.getElementById("expenseAmount").value);
-
-    const { data: { user } } =
-
-      await supabaseClient.auth.getUser();
-
-    if (!user) {
-
-      alert("Silakan login dulu.");
-
-      return;
-
-    }
-
-    const { error } =
-
-      await supabaseClient
-
-        .from("expenses")
-
-        .insert({
-
-          name: name,
-
-          amount: amount,
-
-          paid: false,
-
-          user_id: user.id
-
-        });
-
-    if (error) {
-
-      alert("Gagal menambah: " + error.message);
-
-      return;
-
-    }
-
-    document.getElementById("expenseName").value = "";
-
-    document.getElementById("expenseAmount").value = "";
-
-    loadExpenses();
-
+  if (!user) {
+    alert("Silakan login dulu.");
+    return;
   }
+
+  const { data: membership } =
+    await supabaseClient
+      .from("wedding_members")
+      .select("wedding_id")
+      .eq("user_id", user.id)
+      .maybeSingle();
+
+  if (!membership) {
+    alert("Akun belum terhubung ke wedding.");
+    return;
+  }
+
+  const { error } =
+    await supabaseClient
+      .from("expenses")
+      .insert({
+        name: name,
+        amount: amount,
+        paid: false,
+        user_id: user.id,
+        wedding_id: membership.wedding_id
+      });
+
+  if (error) {
+    alert("Gagal menambah: " + error.message);
+    return;
+  }
+
+  document.getElementById("expenseName").value = "";
+  document.getElementById("expenseAmount").value = "";
+
+  loadExpenses();
+}
 
   // ==============================
 
