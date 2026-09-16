@@ -138,13 +138,15 @@
 
     <div class="card">
 
-      <h3>Ringkasan</h3>
+      <h3>Dashboard</h3>
 
       <p>Total Budget: <b id="totalBudget">Rp0</b></p>
 
       <p>Total Terpakai: <b id="totalUsed">Rp0</b></p>
 
       <p>Sisa Budget: <b id="remaining">Rp0</b></p>
+      
+      <p>Progress: <b id="budgetProgress">0%</b></p>
 
     </div>
 
@@ -469,6 +471,12 @@ if (membership) {
     document.getElementById("remaining").innerText =
 
       "Rp" + (budget - total).toLocaleString("id-ID");
+    
+    const progress =
+  budget > 0 ? Math.round((total / budget) * 100) : 0;
+
+document.getElementById("budgetProgress").innerText =
+  progress + "%";
 
   }
 
