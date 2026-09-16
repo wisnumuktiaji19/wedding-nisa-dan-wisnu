@@ -153,7 +153,18 @@
       <h3>Tambah Pengeluaran</h3>
 
       <input type="text" id="expenseName" placeholder="Contoh: Gedung">
-
+<select id="expenseCategory">
+  <option value="Gedung">Gedung</option>
+  <option value="Catering">Catering</option>
+  <option value="Dekorasi">Dekorasi</option>
+  <option value="Baju & Makeup">Baju & Makeup</option>
+  <option value="Foto & Video">Foto & Video</option>
+  <option value="Mahar & Cincin">Mahar & Cincin</option>
+  <option value="Undangan">Undangan</option>
+  <option value="Akad / KUA">Akad / KUA</option>
+  <option value="Transportasi">Transportasi</option>
+  <option value="Lain-lain">Lain-lain</option>
+</select>
       <input type="number" id="expenseAmount" placeholder="Jumlah">
 
       <button onclick="addExpense()">Tambah</button>
@@ -301,6 +312,9 @@
 
   const amount =
     Number(document.getElementById("expenseAmount").value);
+    
+    const category =
+  document.getElementById("expenseCategory").value;
 
   const { data: { user } } =
     await supabaseClient.auth.getUser();
@@ -328,6 +342,7 @@
       .insert({
         name: name,
         amount: amount,
+        category: category,
         paid: false,
         user_id: user.id,
         wedding_id: membership.wedding_id
@@ -396,13 +411,15 @@
 
       div.innerHTML = `
 
-        <span>
+       <span>
 
-          ${item.name}<br>
+  <small>${item.category}</small><br>
 
-          <b>Rp${Number(item.amount).toLocaleString("id-ID")}</b>
+  ${item.name}<br>
 
-        </span>
+  <b>Rp${Number(item.amount).toLocaleString("id-ID")}</b>
+
+</span>
 
         <button
 
