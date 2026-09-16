@@ -4,249 +4,101 @@
 
 <head>
 
-<meta charset="UTF-8">
+  <meta charset="UTF-8">
 
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Wedding Budgeting — Wisnu & Nisa</title>
+  <title>Wedding Budgeting — Wisnu & Nisa</title>
 
-<style>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-* {
+  <style>
 
-  box-sizing: border-box;
+    body {
 
-}
+      font-family: Arial, sans-serif;
 
-body {
+      background: #f5f5f5;
 
-  margin: 0;
+      margin: 0;
 
-  font-family: Arial, sans-serif;
+      padding: 20px;
 
-  background: #f6f3ef;
+    }
 
-  color: #333;
+    .container {
 
-}
+      max-width: 600px;
 
-.container {
+      margin: auto;
 
-  max-width: 600px;
+    }
 
-  margin: auto;
+    h1 {
 
-  padding: 20px;
+      text-align: center;
 
-}
+    }
 
-.header {
+    .card {
 
-  background: #fff;
+      background: white;
 
-  border-radius: 20px;
+      padding: 18px;
 
-  padding: 25px;
+      border-radius: 15px;
 
-  margin-bottom: 15px;
+      margin-bottom: 15px;
 
-  box-shadow: 0 4px 15px rgba(0,0,0,.06);
+      box-shadow: 0 3px 10px rgba(0,0,0,.08);
 
-}
+    }
 
-.header h1 {
+    input, button {
 
-  margin: 0;
+      width: 100%;
 
-  font-size: 25px;
+      padding: 12px;
 
-}
+      margin-top: 8px;
 
-.header p {
+      box-sizing: border-box;
 
-  margin: 7px 0 0;
+      border-radius: 8px;
 
-  color: #777;
+      border: 1px solid #ddd;
 
-}
+    }
 
-.cards {
+    button {
 
-  display: grid;
+      background: #222;
 
-  grid-template-columns: 1fr 1fr;
+      color: white;
 
-  gap: 12px;
+      cursor: pointer;
 
-}
+    }
 
-.card {
+    .expense {
 
-  background: white;
+      display: flex;
 
-  padding: 18px;
+      justify-content: space-between;
 
-  border-radius: 16px;
+      padding: 12px 0;
 
-  box-shadow: 0 4px 15px rgba(0,0,0,.05);
+      border-bottom: 1px solid #eee;
 
-}
+    }
 
-.card small {
+    .logout {
 
-  color: #888;
+      background: #b00020;
 
-}
+    }
 
-.card h2 {
-
-  margin: 8px 0 0;
-
-  font-size: 20px;
-
-}
-
-.section {
-
-  background: white;
-
-  margin-top: 15px;
-
-  padding: 20px;
-
-  border-radius: 18px;
-
-  box-shadow: 0 4px 15px rgba(0,0,0,.05);
-
-}
-
-.section h3 {
-
-  margin-top: 0;
-
-}
-
-input, select {
-
-  width: 100%;
-
-  padding: 12px;
-
-  margin: 6px 0;
-
-  border: 1px solid #ddd;
-
-  border-radius: 10px;
-
-  font-size: 15px;
-
-}
-
-button {
-
-  width: 100%;
-
-  padding: 13px;
-
-  border: 0;
-
-  border-radius: 10px;
-
-  background: #333;
-
-  color: white;
-
-  font-size: 15px;
-
-  margin-top: 8px;
-
-}
-
-.item {
-
-  display: flex;
-
-  justify-content: space-between;
-
-  align-items: center;
-
-  border-bottom: 1px solid #eee;
-
-  padding: 12px 0;
-
-}
-
-.item:last-child {
-
-  border-bottom: none;
-
-}
-
-.item-name {
-
-  font-weight: bold;
-
-}
-
-.item-price {
-
-  color: #666;
-
-  font-size: 14px;
-
-}
-
-.delete {
-
-  width: auto;
-
-  background: #eee;
-
-  color: #555;
-
-  padding: 7px 10px;
-
-  margin: 0 0 0 8px;
-
-}
-
-.progress {
-
-  height: 10px;
-
-  background: #eee;
-
-  border-radius: 10px;
-
-  overflow: hidden;
-
-  margin-top: 12px;
-
-}
-
-.progress-bar {
-
-  height: 100%;
-
-  width: 0%;
-
-  background: #555;
-
-}
-
-.footer {
-
-  text-align: center;
-
-  color: #999;
-
-  padding: 25px 0;
-
-  font-size: 13px;
-
-}
-
-</style>
+  </style>
 
 </head>
 
@@ -254,125 +106,69 @@ button {
 
 <div class="container">
 
-  <div class="header">
+  <h1>Wisnu & Nisa 💍</h1>
 
-    <h1>Wisnu & Nisa 💍</h1>
+  <p style="text-align:center;">Wedding Budgeting</p>
 
-    <p>Wedding Budgeting</p>
+  <div id="loginBox" class="card">
+
+    <h3>Login</h3>
+
+    <input type="email" id="email" placeholder="Email">
+
+    <input type="password" id="password" placeholder="Password">
+
+    <button onclick="login()">Login</button>
+
+    <p id="loginMessage"></p>
 
   </div>
 
-  <div class="cards">
+  <div id="app" style="display:none;">
 
     <div class="card">
 
-      <small>Total Budget</small>
+      <h3>Budget</h3>
 
-      <h2 id="budget">Rp0</h2>
+      <input type="number" id="budget" placeholder="Total budget">
 
-    </div>
-
-    <div class="card">
-
-      <small>Total Terpakai</small>
-
-      <h2 id="spent">Rp0</h2>
-
-    </div>
-
-    <div class="card">
-
-      <small>Sisa Budget</small>
-
-      <h2 id="remaining">Rp0</h2>
+      <button onclick="saveBudget()">Simpan Budget</button>
 
     </div>
 
     <div class="card">
 
-      <small>Progress</small>
+      <h3>Ringkasan</h3>
 
-      <h2 id="percentage">0%</h2>
+      <p>Total Budget: <b id="totalBudget">Rp0</b></p>
 
-    </div>
+      <p>Total Terpakai: <b id="totalUsed">Rp0</b></p>
 
-  </div>
-
-  <div class="section">
-
-    <h3>💰 Budget Pernikahan</h3>
-
-    <input
-
-      type="number"
-
-      id="budgetInput"
-
-      placeholder="Contoh: 50000000"
-
-    >
-
-    <button onclick="saveBudget()">
-
-      Simpan Budget
-
-    </button>
-
-    <div class="progress">
-
-      <div class="progress-bar" id="progressBar"></div>
+      <p>Sisa Budget: <b id="remaining">Rp0</b></p>
 
     </div>
 
-  </div>
+    <div class="card">
 
-  <div class="section">
+      <h3>Tambah Pengeluaran</h3>
 
-    <h3>📋 Tambah Pengeluaran</h3>
+      <input type="text" id="expenseName" placeholder="Contoh: Gedung">
 
-    <input
+      <input type="number" id="expenseAmount" placeholder="Jumlah">
 
-      type="text"
-
-      id="nameInput"
-
-      placeholder="Contoh: Gedung / Catering / Cincin"
-
-    >
-
-    <input
-
-      type="number"
-
-      id="priceInput"
-
-      placeholder="Nominal"
-
-    >
-
-    <button onclick="addExpense()">
-
-      + Tambah Pengeluaran
-
-    </button>
-
-  </div>
-
-  <div class="section">
-
-    <h3>🧾 Daftar Pengeluaran</h3>
-
-    <div id="expenseList">
-
-      Belum ada pengeluaran.
+      <button onclick="addExpense()">Tambah</button>
 
     </div>
 
-  </div>
+    <div class="card">
 
-  <div class="footer">
+      <h3>Daftar Pengeluaran</h3>
 
-    Wedding preparation • Wisnu & Nisa
+      <div id="expenseList"></div>
+
+    </div>
+
+    <button class="logout" onclick="logout()">Logout</button>
 
   </div>
 
@@ -380,207 +176,325 @@ button {
 
 <script>
 
-let budget = Number(localStorage.getItem("weddingBudget")) || 0;
+  // ==============================
 
-let expenses =
+  // SUPABASE
 
-  JSON.parse(localStorage.getItem("weddingExpenses")) || [];
+  // ==============================
 
-function formatRupiah(number) {
+  const SUPABASE_URL = "https://igszkkrcbkpmnbqfqpzm.supabase.co/rest/v1/";
 
-  return new Intl.NumberFormat("id-ID", {
+  const SUPABASE_KEY = "sb_publishable_jnabjvVdmpdCie4C2bk7dA_WlhREBiG";
 
-    style: "currency",
+  const supabaseClient =
 
-    currency: "IDR",
+    window.supabase.createClient(
 
-    maximumFractionDigits: 0
+      SUPABASE_URL,
 
-  }).format(number);
+      SUPABASE_KEY
 
-}
+    );
 
-function saveBudget() {
+  // ==============================
 
-  const value =
+  // LOGIN
 
-    Number(document.getElementById("budgetInput").value);
+  // ==============================
 
-  if (!value) {
+  async function login() {
 
-    alert("Masukkan budget terlebih dahulu.");
+    const email =
 
-    return;
+      document.getElementById("email").value;
 
-  }
+    const password =
 
-  budget = value;
+      document.getElementById("password").value;
 
-  localStorage.setItem(
+    const { error } =
 
-    "weddingBudget",
+      await supabaseClient.auth.signInWithPassword({
 
-    budget
+        email: email,
 
-  );
+        password: password
 
-  update();
+      });
 
-}
+    if (error) {
 
-function addExpense() {
+      document.getElementById("loginMessage").innerText =
 
-  const name =
+        "Login gagal: " + error.message;
 
-    document.getElementById("nameInput").value;
+      return;
 
-  const price =
+    }
 
-    Number(document.getElementById("priceInput").value);
+    showApp();
 
-  if (!name || !price) {
-
-    alert("Isi nama dan nominal terlebih dahulu.");
-
-    return;
+    loadExpenses();
 
   }
 
-  expenses.push({
+  // ==============================
 
-    name: name,
+  // CEK LOGIN
 
-    price: price
+  // ==============================
 
-  });
+  async function checkLogin() {
 
-  localStorage.setItem(
+    const { data } =
 
-    "weddingExpenses",
+      await supabaseClient.auth.getSession();
 
-    JSON.stringify(expenses)
+    if (data.session) {
 
-  );
+      showApp();
 
-  document.getElementById("nameInput").value = "";
+      loadExpenses();
 
-  document.getElementById("priceInput").value = "";
+    } else {
 
-  update();
+      document.getElementById("loginBox").style.display = "block";
 
-}
+      document.getElementById("app").style.display = "none";
 
-function deleteExpense(index) {
-
-  expenses.splice(index, 1);
-
-  localStorage.setItem(
-
-    "weddingExpenses",
-
-    JSON.stringify(expenses)
-
-  );
-
-  update();
-
-}
-
-function update() {
-
-  let spent = expenses.reduce(
-
-    (total, item) => total + item.price,
-
-    0
-
-  );
-
-  let remaining = budget - spent;
-
-  let percentage =
-
-    budget > 0
-
-    ? Math.round((spent / budget) * 100)
-
-    : 0;
-
-  document.getElementById("budget").innerText =
-
-    formatRupiah(budget);
-
-  document.getElementById("spent").innerText =
-
-    formatRupiah(spent);
-
-  document.getElementById("remaining").innerText =
-
-    formatRupiah(remaining);
-
-  document.getElementById("percentage").innerText =
-
-    percentage + "%";
-
-  document.getElementById("progressBar").style.width =
-
-    Math.min(percentage, 100) + "%";
-
-  const list =
-
-    document.getElementById("expenseList");
-
-  if (expenses.length === 0) {
-
-    list.innerHTML =
-
-      "Belum ada pengeluaran.";
-
-    return;
+    }
 
   }
 
-  list.innerHTML =
+  function showApp() {
 
-    expenses.map((item, index) => `
+    document.getElementById("loginBox").style.display = "none";
 
-      <div class="item">
+    document.getElementById("app").style.display = "block";
 
-        <div>
+  }
 
-          <div class="item-name">
+  // ==============================
 
-            ${item.name}
+  // LOGOUT
 
-          </div>
+  // ==============================
 
-          <div class="item-price">
+  async function logout() {
 
-            ${formatRupiah(item.price)}
+    await supabaseClient.auth.signOut();
 
-          </div>
+    location.reload();
 
-        </div>
+  }
+
+  // ==============================
+
+  // TAMBAH PENGELUARAN
+
+  // ==============================
+
+  async function addExpense() {
+
+    const name =
+
+      document.getElementById("expenseName").value;
+
+    const amount =
+
+      Number(document.getElementById("expenseAmount").value);
+
+    const { data: { user } } =
+
+      await supabaseClient.auth.getUser();
+
+    if (!user) {
+
+      alert("Silakan login dulu.");
+
+      return;
+
+    }
+
+    const { error } =
+
+      await supabaseClient
+
+        .from("expenses")
+
+        .insert({
+
+          name: name,
+
+          amount: amount,
+
+          paid: false,
+
+          user_id: user.id
+
+        });
+
+    if (error) {
+
+      alert("Gagal menambah: " + error.message);
+
+      return;
+
+    }
+
+    document.getElementById("expenseName").value = "";
+
+    document.getElementById("expenseAmount").value = "";
+
+    loadExpenses();
+
+  }
+
+  // ==============================
+
+  // TAMPILKAN DATA
+
+  // ==============================
+
+  async function loadExpenses() {
+
+    const { data: { user } } =
+
+      await supabaseClient.auth.getUser();
+
+    if (!user) return;
+
+    const { data, error } =
+
+      await supabaseClient
+
+        .from("expenses")
+
+        .select("*")
+
+        .order("created_at", { ascending: false });
+
+    if (error) {
+
+      alert("Gagal mengambil data: " + error.message);
+
+      return;
+
+    }
+
+    const list =
+
+      document.getElementById("expenseList");
+
+    list.innerHTML = "";
+
+    let total = 0;
+
+    data.forEach(item => {
+
+      total += Number(item.amount);
+
+      const div =
+
+        document.createElement("div");
+
+      div.className = "expense";
+
+      div.innerHTML = `
+
+        <span>
+
+          ${item.name}<br>
+
+          <b>Rp${Number(item.amount).toLocaleString("id-ID")}</b>
+
+        </span>
 
         <button
 
-          class="delete"
+          onclick="deleteExpense('${item.id}')"
 
-          onclick="deleteExpense(${index})"
-
-        >
+          style="width:auto;background:#b00020;">
 
           Hapus
 
         </button>
 
-      </div>
+      `;
 
-    `).join("");
+      list.appendChild(div);
 
-}
+    });
 
-update();
+    document.getElementById("totalUsed").innerText =
+
+      "Rp" + total.toLocaleString("id-ID");
+
+    const budget =
+
+      Number(localStorage.getItem("budget") || 0);
+
+    document.getElementById("totalBudget").innerText =
+
+      "Rp" + budget.toLocaleString("id-ID");
+
+    document.getElementById("remaining").innerText =
+
+      "Rp" + (budget - total).toLocaleString("id-ID");
+
+  }
+
+  // ==============================
+
+  // HAPUS
+
+  // ==============================
+
+  async function deleteExpense(id) {
+
+    const { error } =
+
+      await supabaseClient
+
+        .from("expenses")
+
+        .delete()
+
+        .eq("id", id);
+
+    if (error) {
+
+      alert("Gagal menghapus: " + error.message);
+
+      return;
+
+    }
+
+    loadExpenses();
+
+  }
+
+  // ==============================
+
+  // BUDGET
+
+  // ==============================
+
+  function saveBudget() {
+
+    const budget =
+
+      Number(document.getElementById("budget").value);
+
+    localStorage.setItem("budget", budget);
+
+    loadExpenses();
+
+    alert("Budget tersimpan");
+
+  }
+
+  checkLogin();
 
 </script>
 
