@@ -491,7 +491,7 @@ if (membership) {
 
   // ==============================
 
-  async function saveBudget() {
+ async function saveBudget() {
 
   const budget =
     Number(document.getElementById("budget").value);
@@ -504,11 +504,23 @@ if (membership) {
     return;
   }
 
+  const { data: membership } =
+    await supabaseClient
+      .from("wedding_members")
+      .select("wedding_id")
+      .eq("user_id", user.id)
+      .maybeSingle();
+
+  if (!membership) {
+    alert("Akun belum terhubung ke wedding.");
+    return;
+  }
+
   const { data: existing } =
     await supabaseClient
       .from("wedding_settings")
       .select("id")
-      .eq("user_id", user.id)
+      .eq("wedding_id", membership.wedding_id)
       .maybeSingle();
 
   let error;
@@ -530,6 +542,7 @@ if (membership) {
         .from("wedding_settings")
         .insert({
           user_id: user.id,
+          wedding_id: membership.wedding_id,
           budget: budget
         });
 
