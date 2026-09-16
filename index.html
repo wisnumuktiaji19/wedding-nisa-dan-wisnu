@@ -147,6 +147,11 @@
       <p>Sisa Budget: <b id="remaining">Rp0</b></p>
       
       <p>Progress: <b id="budgetProgress">0%</b></p>
+      <div style="background:#eee;border-radius:10px;height:12px;margin-top:8px;">
+  <div id="budgetProgressBar"
+       style="background:#333;border-radius:10px;height:12px;width:0%;">
+  </div>
+</div>
 
     </div>
 
@@ -477,7 +482,9 @@ if (membership) {
 
 document.getElementById("budgetProgress").innerText =
   progress + "%";
-
+    
+document.getElementById("budgetProgressBar").style.width =
+  Math.min(progress, 100) + "%";
   }
 
   // ==============================
