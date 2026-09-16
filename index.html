@@ -413,10 +413,16 @@
     list.innerHTML = "";
 
     let total = 0;
+    const categoryTotals = {};
 
     data.forEach(item => {
 
       total += Number(item.amount);
+      if (!categoryTotals[item.category]) {
+  categoryTotals[item.category] = 0;
+}
+
+categoryTotals[item.category] += Number(item.amount);
 
       const div =
 
@@ -503,6 +509,19 @@ document.getElementById("budgetProgress").innerText =
     
 document.getElementById("budgetProgressBar").style.width =
   Math.min(progress, 100) + "%";
+    const categorySummary =
+  document.getElementById("categorySummary");
+
+categorySummary.innerHTML = "";
+
+Object.entries(categoryTotals).forEach(([category, amount]) => {
+  categorySummary.innerHTML += `
+    <p>
+      <b>${category}</b><br>
+      Rp${amount.toLocaleString("id-ID")}
+    </p>
+  `;
+});
   }
 
   // ==============================
