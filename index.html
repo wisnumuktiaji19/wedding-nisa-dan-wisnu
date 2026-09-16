@@ -480,18 +480,60 @@
 
   // ==============================
 
-  function saveBudget() {
+  async function saveBudget() {
 
-    const budget =
+  const budget =
+    Number(document.getElementById("budget").value);
 
-      Number(document.getElementById("budget").value);
+  const { data: { user } } =
+    await supabaseClient.auth.getUser();
 
-    localStorage.setItem("budget", budget);
+  if (!user) {
+    alert("Silakan login dulu.");
+    return;
+  }
 
-    loadExpenses();
+  const { data: existing } =
+    await supabaseClient
+      .from("wedding_settings")
+      .select("id")
+      .eq("user_id", user.id)
+      .maybeSingle();
 
-    alert("Budget tersimpan");
+  let error;
 
+  if (existing) {
+
+    const result =
+      await supabaseClient
+        .from("wedding_settings")
+        .update({ budget: budget })
+        .eq("id", existing.id);
+
+    error = result.error;
+
+  } else {
+
+    const result =
+      await supabaseClient
+        .from("wedding_settings")
+        .insert({
+          user_id: user.id,
+          budget: budget
+        });
+
+    error = result.error;
+  }
+
+  if (error) {
+    alert("Gagal menyimpan budget: " + error.message);
+    return;
+  }
+
+  alert("Budget berhasil disimpan!");
+
+  loadExpenses();
+}
   }
 
   checkLogin();
