@@ -422,9 +422,11 @@
 
   <small>${item.category}</small><br>
 
-  ${item.name}<br>
+ ${item.name}<br>
 
-  <b>Rp${Number(item.amount).toLocaleString("id-ID")}</b>
+<b>Rp${Number(item.amount).toLocaleString("id-ID")}</b><br>
+
+<small>${item.paid ? "✅ Sudah dibayar" : "🟡 Belum dibayar"}</small>
 
 </span>
 
