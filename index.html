@@ -430,15 +430,26 @@
 
       "Rp" + total.toLocaleString("id-ID");
 
-    const { data: settings } =
+   const { data: membership } =
   await supabaseClient
-    .from("wedding_settings")
-    .select("budget")
+    .from("wedding_members")
+    .select("wedding_id")
     .eq("user_id", user.id)
     .maybeSingle();
 
-const budget =
-  Number(settings?.budget || 0)
+let budget = 0;
+
+if (membership) {
+
+  const { data: settings } =
+    await supabaseClient
+      .from("wedding_settings")
+      .select("budget")
+      .eq("wedding_id", membership.wedding_id)
+      .maybeSingle();
+
+  budget = Number(settings?.budget || 0);
+}
 
     document.getElementById("totalBudget").innerText =
 
